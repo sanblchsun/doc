@@ -1,0 +1,1 @@
+wmic /node:BONDAR service get name,displayname,state /format:htable >> 1.html

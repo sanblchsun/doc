@@ -1,2 +1,4 @@
 wmic /node:NAMEPC service get name,displayname,state /format:htable >> 1.html
 wmic /node:NAMEPC /user:'' /PASSWORD:'' service where (name='mpssvc') get name,displayname,state /format:htable > 1.html
+# Turn on Remoted Desktop Remotely
+Wmic /node:"servername" /user:"user@domain" /password: "password" RDToggle where ServerName="server name" call SetAllowTSConnections 1

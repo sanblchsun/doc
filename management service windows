@@ -42,3 +42,5 @@ wmic os get bootdevice, buildnumber, caption, freespaceinpagingfiles, installdat
 wmic path cim_datafile where "Path='\windows\system32\wbem\' and FileSize>1784088" > c:wbemfiles.txt
 # 
 wmic service where (name='RemoteRegistry') CALL ChangeStartMode Automatic
+#
+wmic /node:'namePC' /user:'' /PASSWORD:'' service where (name='RemoteRegistry') call StartService

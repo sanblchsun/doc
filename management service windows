@@ -1,4 +1,42 @@
 wmic /node:NAMEPC service get name,displayname,state /format:htable >> 1.html
 wmic /node:NAMEPC /user:'' /PASSWORD:'' service where (name='mpssvc') get name,displayname,state /format:htable > 1.html
+# Start an Application
+wmic process call create "calc.exe"
+# Terminate an Application
+wmic process where name="calc.exe" call terminate
+
+# Change Process Priority
+wmic process where name="explorer.exe" call setpriority 64
+# Get List of Process Identifiers
+wmic process where (Name='svchost.exe') get name,processid
+# Find a specific Process
+wmic process list brief find "cmd.exe"
+# System Information and Settings
+# You can collect a listing of the environment variables (including the PATH) with this command:
+
+wmic environment list
+# OS/System Report HTML Formatted
+wmic /output:c:os.html os get /format:hform
+# Products/Programs Installed Report HTML Formatted
+wmic /output:c:product.html product get /format:hform
+
 # Turn on Remoted Desktop Remotely
 Wmic /node:"servername" /user:"user@domain" /password: "password" RDToggle where ServerName="server name" call SetAllowTSConnections 1
+# Get Server Drive Space Usage Remotely
+WMIC /Node:%%A LogicalDisk Where DriveType="3" Get DeviceID,FileSystem,FreeSpace,Size /Format:csv MORE /E +2 >> SRVSPACE.CSV
+# Get PC Serial Number
+wmic /node:"HOST" bios get serialnumber
+# Get PC Product Number
+wmic /node:"HOST" baseboard get product
+# Find stuff that starts on boot
+wmic STARTUP GET Caption, Command, User
+# Reboot or Shutdown
+wmic os where buildnumber="2600" call reboot
+# Get Startup List
+wmic startup list full
+# Information About Harddrives
+wmic logicaldisk where drivetype=3 get name, freespace, systemname, filesystem, size, volumeserialnumber
+# Information about os
+wmic os get bootdevice, buildnumber, caption, freespaceinpagingfiles, installdate, name, systemdrive, windowsdirectory /format:htable > c:osinfo.htm
+# Information about files
+wmic path cim_datafile where "Path='\windows\system32\wbem\' and FileSize>1784088" > c:wbemfiles.txt

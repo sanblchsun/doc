@@ -40,3 +40,5 @@ wmic logicaldisk where drivetype=3 get name, freespace, systemname, filesystem, 
 wmic os get bootdevice, buildnumber, caption, freespaceinpagingfiles, installdate, name, systemdrive, windowsdirectory /format:htable > c:osinfo.htm
 # Information about files
 wmic path cim_datafile where "Path='\windows\system32\wbem\' and FileSize>1784088" > c:wbemfiles.txt
+# 
+wmic service where (name='RemoteRegistry') CALL ChangeStartMode Automatic

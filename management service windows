@@ -1,6 +1,8 @@
 wmic /node:NAMEPC service get name,displayname,state /format:htable >> 1.html
 # all PC c enable firewall
 wmic /node:NAMEPC /user:'' /PASSWORD:'' service where (name='mpssvc') get name,displayname,state /format:htable > 1.html
+# desable firewall
+netsh advfirewall set allprofiles state off
 # Start an Application
 wmic process call create "calc.exe"
 # Terminate an Application

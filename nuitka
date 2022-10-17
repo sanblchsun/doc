@@ -1,1 +1,1 @@
-python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 
+python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 main.py

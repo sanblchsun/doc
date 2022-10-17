@@ -1,1 +1,1 @@
-python -m nuitka --standalone --onefile --enable-plugin=numpy test.py
+python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 

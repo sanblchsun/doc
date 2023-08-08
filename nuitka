@@ -1,3 +1,3 @@
 python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 main.py
 python -m nuitka --standalone --onefile --follow-imports --disable-console --onefile-tempdir-spec="%PROGRAM%/../extracted" main.py
-python -m nuitka --standalone --follow-imports --disable-console --force-stderr-spec='%PROGRAM%.err.txt' main.py 
+python -m nuitka --standalone --follow-imports --disable-console --force-stderr-spec=%PROGRAM%.err.txt main.py 

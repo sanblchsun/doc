@@ -1,0 +1,4 @@
+docker pull kalilinux/kali-rolling
+sudo docker run -it name_image  /bin/bash
+apt update && apt -y install kali-linux-headless
+apt update && apt -y install kali-linux-large

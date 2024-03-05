@@ -1,0 +1,6 @@
+Сбой загрузки UBUNTU "initramfs"
+
+1) в строке (initramfs) пишем команду blkid 
+  ищем диск c TYPE="ext4" на котором стоит UBUNTU
+2) пишем fsck /dev/sda1 -y   (иправляем блоки)
+3) reboot

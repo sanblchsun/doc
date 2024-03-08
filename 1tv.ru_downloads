@@ -1,5 +1,4 @@
-Как скачать видео с сайта первого канала 1tv.ru
-2017.05.16 16:40
+
 Как скачать видео с сайта первого канала 1tv.ru
 
 
@@ -18,13 +17,9 @@
 https://www.1tv.ru/video_materials.json?single=false&sort=none&video_id=
 
 
-Для нашего примера должно получиться такое:
-
-
-https://www.1tv.ru/video_materials.json?single=false&sort=none&video_id=90083
-
-
 Полученную ссылку открываем в браузере. Откроется страница с текстом. Там нужно найти строку вида:
 
 
 redirect.1tv.ru/video/multibitrate/video/2017/04/27/53acef04-40e6-4b6f-92d0-b00c103f8951_Davai_poj_za_nedelu_20170427_950.mp4
+
+и жмем кнопку скачать, в правом верхнем углу, Яндекс Браузер

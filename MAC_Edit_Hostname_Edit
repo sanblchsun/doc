@@ -1,5 +1,5 @@
-Kali Linux смена после reboot MAC адреса и имя хоста.
-в bash пишем 
+Kali Linux на VirtualBox, смена после reboot MAC адреса и имя хоста.
+в bash в VM пишем 
 crontab -e
 и пишем в этот файл:
 @reboot macchanger -r eth0 && /root/cron.sh
@@ -11,6 +11,8 @@ ip link set dev eth0 promisc on
 
 скрипт /root/cron.sh делаем исполняемым
 chmod +x /root/cron.sh
+
+еще для виртуальной машины virtualBox я в настройках сети указал неразборчивый режим -> разрешит все 
 
 Вот статья на этот счет.
 

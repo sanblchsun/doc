@@ -1,4 +1,96 @@
-Скачать исходный код последней версии Python. Для этого нужно использовать команду wget и скачать последнюю версию Python с официального сайта. Например: wget https://www.python.org/ftp/python/3.11.3/Python-3.11.3.tgz. 3
-Извлечь загруженный пакет. Для этого используется команда tar. Например: tar -xf Python-3.11.3.tgz. 3
-Запустить тест на оптимизацию. Для этого нужно перейти в извлечённый пакет Python с помощью команды cd и запустить тест с помощью команды configure. Например: cd Python-3.11.3 && ./configure --enable-optimizations. 3
-Собрать пакет Python. После завершения теста на оптимизацию нужно собрать исходный код Python с помощью команды make -j 12. Когда процесс завершится, установить бинарные файлы Python с помощью команды sudo make altinstall. 3
+Установка разных версий Python 3 на Linux
+как можно установить несколько разных версий Python 3 на Linux, на примере дистрибутива Debian 12.
+
+дистрибутивы Linux обычно в своих репозиториях хранят одну версию Python 3. Например, репозитории для Debian:
+
+Debian Bookworm (12) — Python 3.11;
+Debian Bullseye (11) — Python 3.9;
+Debian Buster (10) — Python 3.7;
+Debian Stretch (9) — Python 3.5, и так далее.
+Но Python 3 можно установить не только из репозиториев, его можно скомпилировать из исходных кодов.
+
+# apt update -y && apt upgrade -y
+# apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev -y
+Теперь скачаем необходимую версию Python 3, в нашем примере это Python-3.7.16.tar.xz:
+
+# wget https://www.python.org/ftp/python/3.7.16/Python-3.7.16.tar.xz
+Распакуем архив в каталог /usr/local/share/python3.7, предварительно создав его:
+
+# mkdir -p /usr/local/share/python3.7
+# tar -xf Python-3.7.16.tar.xz -C /usr/local/share/python3.7
+
+Компилирование
+Флаг —enable-optimizations предписывает сценарию выполнить несколько проверок, чтобы убедиться в наличии всех зависимостей, и оптимизирует двоичный файл Python путем запуска нескольких тестов.
+Флаг —enable-shared создает разделяемые библиотеки, которые необходимы для определенных типов приложений.
+Флаг —with-ensurepip=install — дополнительно установит нужную версию pip пакетного менеджера.
+
+# cd /usr/local/share/python3.7/Python-3.7.16
+# ./configure --enable-optimizations --enable-shared --with-ensurepip=install
+
+Теперь пришло время скомпилировать исходный код с помощью команды make. 
+# make -j 3
+
+Как только компилирование будет завершена, установите двоичные файлы Python. Рекомендуется использовать команду make altinstall, чтобы избежать перезаписи двоичного файла Python по умолчанию в системе.
+
+# make altinstall
+После установки, обязательно, настройте привязки динамического компоновщика. Пропуск этого важного шага может вызвать проблемы.
+на WSL2 Debian Bookworm (12) я получил ошибку:
+make: *** [Makefile:1290: altinstall] Error 1
+FIX:
+sudo apt-get install build-essential libsqlite3-dev sqlite3 bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev
+И повторил:
+# make altinstall
+
+# ldconfig /usr/local/share/python3.7
+Давайте проверим установку, проверив версию Python, чтобы подтвердить, что установка Python 3.7 прошла успешно и готова к использованию.
+на WSL2 Debian Bookworm (12) я получил ошибку:
+ldconfig: /usr/lib/wsl/lib/libcuda.so.1 is not a symbolic link
+FIX:
+Перейти в директорию /usr/lib/wsl/lib
+Удалить файлы libcuda.so и libcuda.so.1
+Создать символические ссылки на файлы libcuda.so.1.1 и libcuda.so.1 с помощью команд ln -s libcuda.so.1.1 libcuda.so.1 и ln -s libcuda.so.1 libcuda.so
+Выполнить команду sudo ldconfig
+И повторил:
+# ldconfig /usr/local/share/python3.7
+
+# python3.7 --version
+Python 3.7.16
+Кстати, в системе также установлена другая версия Python 3, которая сейчас используется по умолчанию:
+
+# python3 --version
+Python 3.11.2
+
+Настройка версии Python 3 по умолчанию
+Эти версии Python находятся в разных местах файловой системы:
+
+# which python3.7
+/usr/local/bin/python3.7
+# which python3
+/usr/bin/python3
+Теперь можем, с помощью инструмента update-alternatives, указать какую версию Python 3 использовать.
+
+Для начала установим обе версии в качестве альтернатив. Вначале указываем путь к программе (/usr/bin/python), затем называем группу ссылок (python), затем путь к программе (/usr/local/bin/python3.7 или /usr/bin/python3.11) и приоритет для этой группы.
+
+# update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 1
+# update-alternatives --install /usr/bin/python python /usr/bin/python3.11 2
+А с помощью следующей команды мы можем выбирать версию Python 3 в интерактивном режиме:
+
+# update-alternatives --config python
+Есть 2 варианта для альтернативы python (предоставляет /usr/bin/python).
+  Выбор   Путь                  Приор Состояние
+------------------------------------------------------------
+* 0            /usr/bin/python3.11        2         автоматический режим
+  1            /usr/bin/python3.11        2         ручной режим
+  2            /usr/local/bin/python3.7   1         ручной режим
+Нажмите «enter», чтобы не менять текущий выбор[*], или введите нужное число:
+Либо можем использовать не интерактивный режим:
+
+# update-alternatives --list python
+/usr/bin/python3.11
+/usr/local/bin/python3.7
+# update-alternatives --set python /usr/bin/python3.11
+# python --version
+Python 3.11.2
+# update-alternatives --set python /usr/local/bin/python3.7
+# python --version
+Python 3.7.16

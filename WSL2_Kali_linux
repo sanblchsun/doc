@@ -1,4 +1,0 @@
-sudo apt install -y xfce4
-sudo apt install -y xrdp
-sudo apt-get install dbus-x11
-sudo /etc/init.d/xrdp start

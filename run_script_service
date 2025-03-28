@@ -1,0 +1,46 @@
+Запуск Python скрипта в виде службы через systemctl/systemd
+
+
+sudo apt install -y systemd
+systemd --version
+sudo nano test.py
+
+<<<<<<
+import time
+from datetime import datetime
+while True:
+    with open("timestamp.txt", "a") as f:
+        f.write("Текущая временная метка: " + str(datetime.now()))
+        f.close()
+    time.sleep(10)
+>>>>>>>
+
+sudo nano /etc/systemd/system/test.service
+
+<<<<<<<<<
+[Unit]
+Description=My test service
+After=multi-user.target
+ 
+[Service]
+User=deepak
+Group=admin
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /home/<username>/test.py
+ 
+[Install]
+WantedBy=multi-user.target
+>>>>>>>>>>
+
+sudo systemctl daemon-reload
+sudo systemctl enable test.service
+Чтобы остановить службу.
+
+sudo systemctl stop name_of_your_service
+Перезагрузить.
+
+sudo systemctl restart name_of_your_service
+Чтобы проверить статус.
+
+sudo systemctl status name_of_your_service

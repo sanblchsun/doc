@@ -1,7 +1,7 @@
 1) На удаленном сервере Ubuntu 
 docker pull metaligh/amneziawg
 docker run -d --name amnezia_container --cap-add NET_ADMIN --device /dev/net/tun -p 51820:51820/udp metaligh/amneziawg
-2) sudo apt install libxcb-cursor0
+2) далее на клиенте sudo apt install libxcb-cursor0
 3) скачать и установите на клиенте 
 https://amnezia.app/ru/downloads
 3) на клиенте через Amnezia VPN настроить удаленный сервер предоставив доступ к root

@@ -1,3 +1,39 @@
 python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 main.py
 python -m nuitka --standalone --onefile --follow-imports --disable-console --onefile-tempdir-spec="%PROGRAM%/../extracted" main.py
 python -m nuitka --standalone --follow-imports --disable-console --force-stderr-spec=%PROGRAM%.err.txt main.py 
+
+Установка Nuitka и зависимостей:
+pip install nuitka
+brew install clang
+или
+brew install gcc
+
+Базовая сборка на Windows:
+Флаги сборки:
+--standalone — создаёт полностью независимый бинарник, включающий все зависимости.
+--enable-plugin=pyside6 — включает поддержку PySide6.
+
+--windows-console-mode=disable — отключает консольное окно при запуске GUI-приложения.
+
+--include-package=имя_пакета — вручную включает указанный пакет в сборку.
+
+--include-data-dir=абсолютный_путь=относительный_путь — включает файлы и папки в сборку, где слева указывается полный путь, а справа — путь внутри бинарника.
+
+--onefile — упаковывает весь бинарник и зависимости в один исполняемый файл.
+
+--onedir — создаёт папку с бинарником и всеми зависимостями отдельно.
+
+Пример
+python -m nuitka 
+    --standalone \
+    --onedir \
+    --enable-plugin=pyside6 \
+    --windows-console-mode=disable \
+    --include-package=Мой класс \
+    --include-data-dir="папка/папка внутри/данные=папка внутри/папка" \
+    --include-data-dir="папка/данные=данные" \
+    --include-data-dir="данные=данные" \
+    --windows-icon-from-ico="папка/иконка.ico" \
+    --output-dir="папка/куда будем выводить файл" \
+    --output-file="Название приложения.exe" \
+    "путь/Исполняемый код.py"

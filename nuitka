@@ -1,5 +1,6 @@
 python -m nuitka --standalone --follow-imports --enable-plugin=numpy --enable-plugin=pyqt5 main.py
 python -m nuitka --standalone --follow-imports --windows-console-mode=disable var.py
+python -m nuitka --standalone --onefile --windows-console-mode=disable --assume-yes-for-downloads --output-dir=build var.py
 python -m nuitka --standalone --follow-imports --disable-console --force-stderr-spec=%PROGRAM%.err.txt main.py 
  python -m nuitka --standalone --onefile --enable-plugin=tk-inter --windows-console-mode=disable --assume-yes-for-downloads --output-dir=build .\app.py
 

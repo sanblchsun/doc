@@ -1,0 +1,55 @@
+Задача в Alma Linux для postgrespro-1c-16 поменять каталог для базы
+
+Чтобы перенести PostgreSQL (Pro/1C) базу из одного каталога данных в другой (например, с /var/lib/pgpro/1c-16/data в /var/pgsql/base/data/), нужно сделать это правильно, иначе сервер просто не поднимется. Вот пошаговый план:
+
+В postgrespro-1c-16.service переменная ${PGDATA} используется, но сама она в юните не задана напрямую — её значение берётся из конфигурации окружения.
+Где задаётся PGDATA
+
+У Postgres Pro обычно путь хранится в файле:
+
+/etc/sysconfig/postgrespro-1c-16 (на CentOS/RHEL/SLES)
+
+/etc/default/postgrespro-1c-16 (на Debian/Ubuntu)
+
+Проверьте:
+
+grep PGDATA /etc/sysconfig/postgrespro-1c-16
+grep PGDATA /etc/default/postgrespro-1c-16
+
+
+Скорее всего, найдёте строку:
+
+PGDATA=/var/lib/pgpro/1c-16/data
+
+Что нужно сделать
+
+Остановить сервис:
+
+sudo systemctl stop postgrespro-1c-16
+
+
+Скопировать данные:
+
+sudo rsync -av --progress /var/lib/pgpro/1c-16/data/ /var/pgsql/base/data/
+sudo chown -R postgres:postgres /var/pgsql/base/data
+sudo chmod 700 /var/pgsql/base/data
+
+
+Обновить PGDATA в конфиге (/etc/sysconfig/postgrespro-1c-16 или /etc/default/postgrespro-1c-16):
+
+PGDATA=/var/pgsql/base/data
+
+
+Перезагрузить systemd (чтобы подтянулось новое окружение):
+
+sudo systemctl daemon-reexec
+
+
+Запустить сервис:
+
+sudo systemctl start postgrespro-1c-16
+
+
+Проверить, что кластер работает с новым каталогом:
+
+sudo -u postgres psql -c "show data_directory;"

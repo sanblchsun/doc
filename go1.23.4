@@ -1,0 +1,6 @@
+ 1663  sudo rm -rf /usr/local/go
+ 1664  wget https://go.dev/dl/go1.23.4.linux-amd64.tar.gz
+ 1665  sudo tar -C /usr/local -xzf go1.23.4.linux-amd64.tar.gz
+ 1666  export PATH=/usr/local/go/bin:$PATH
+ 1667  go env -w GOTOOLCHAIN=local
+ 1668  go version

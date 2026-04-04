@@ -1,1 +1,8 @@
 ## Полная инструкция: FFmpeg с H.264 + H.265 (Windows exe)
+
+### Шаг 1: Установка пакетов
+
+```
+sudo apt update
+sudo apt install mingw-w64 mingw-w64-tools cmake nasm yasm pkg-config
+```

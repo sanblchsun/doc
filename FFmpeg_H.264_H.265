@@ -6,3 +6,114 @@
 sudo apt update
 sudo apt install mingw-w64 mingw-w64-tools cmake nasm yasm pkg-config
 ```
+
+### Шаг 2: Скачай исходники FFmpeg
+
+```
+cd ~/my_project/ffmpeg
+wget https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
+tar -xf ffmpeg-7.1.tar.xz
+cd ffmpeg-7.1
+```
+
+### Шаг 3: Собери libx264 для MinGW
+
+```
+cd ~/my_project/ffmpeg
+git clone --depth 1 https://code.videolan.org/videolan/x264.git
+cd x264
+./configure \
+    --host=x86_64-w64-mingw32 \
+    --cross-prefix=x86_64-w64-mingw32- \
+    --enable-static \
+    --disable-cli \
+    --disable-asm
+make -j$(nproc)
+sudo make install DESTDIR=/tmp/x264-install
+sudo mkdir /usr/local/x86_64-w64-mingw32/
+sudo cp -r /tmp/x264-install/usr/local/* /usr/local/x86_64-w64-mingw32/
+```
+
+### Шаг 4: Собери libx265 для MinGW
+
+```
+cd ~/my_project/ffmpeg
+git clone https://github.com/videolan/x265.git
+cd x265
+git checkout Release_3.5
+cmake \
+    -DCMAKE_SYSTEM_NAME=Windows \
+    -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
+    -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+    -DCMAKE_RC_COMPILER=x86_64-w64-mingw32-windres \
+    -DENABLE_SHARED=OFF \
+    -DENABLE_CLI=OFF \
+    -DENABLE_ASSEMBLY=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/x86_64-w64-mingw32 \
+    source
+make -j$(nproc)
+sudo make install
+```
+
+### Шаг 5: Собери FFmpeg
+
+
+```
+cd ~/my_project/ffmpeg/ffmpeg-7.1
+
+export CROSS_PREFIX="x86_64-w64-mingw32-"
+export PKG_CONFIG_PATH="/usr/local/x86_64-w64-mingw32/lib/pkgconfig"
+export CFLAGS="-I/usr/local/x86_64-w64-mingw32/include"
+export LDFLAGS="-L/usr/local/x86_64-w64-mingw32/lib"
+
+./configure \
+    --cross-prefix=${CROSS_PREFIX} \
+    --pkg-config-flags="--static" \
+    --prefix=/tmp/ffmpeg-win \
+    --target-os=mingw32 \
+    --arch=x86_64 \
+    --enable-gpl \
+    --enable-libx264 \
+    --enable-libx265 \
+    --enable-static \
+    --disable-shared \
+    --disable-doc \
+    --disable-everything \
+    --enable-decoder=h264 \
+    --enable-decoder=hevc \
+    --enable-encoder=libx264 \
+    --enable-encoder=libx265 \
+    --enable-parser=h264 \
+    --enable-parser=hevc \
+    --enable-muxer=mp4 \
+    --enable-muxer=matroska \
+    --enable-demuxer=avi \
+    --enable-demuxer=matroska \
+    --enable-demuxer=mov \
+    --disable-network \
+    --extra-cflags="-O2" \
+    --extra-ldflags="-static"
+
+make -j$(nproc)
+```
+
+### Шаг 6: Проверка exe
+
+```
+ls -la ~/my_project/ffmpeg/ffmpeg-7.1/ffmpeg.exe
+```
+
+### Шаг 7: Использование на Windows
+
+#### Запись с H.264
+
+```
+ffmpeg.exe -f gdigrab -framerate 30 -i desktop -pix_fmt yuv420p -c:v libx264 -preset ultrafast -crf 0 -t 60 output.mp4
+``
+
+### Запись с H.265
+
+```
+ffmpeg.exe -f gdigrab -framerate 30 -i desktop -pix_fmt yuv420p -c:v libx265 -preset ultrafast -crf 0 -t 60 output.mp4
+```
+
